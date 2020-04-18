@@ -1,2 +1,1 @@
-# djs-code_v12
-This is the code for the guide at https://guide.asad.codes/ (WIP)
+This is the corresponding code for [my **unofficial** discord.js command guide](https://guide.asad.codes/)
