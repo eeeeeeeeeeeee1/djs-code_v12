@@ -1,41 +1,30 @@
-# List of discord.js permissions 
-  down below
-### in array form
-
-```js
-[
-  'CREATE_INSTANT_INVITE',
-  'KICK_MEMBERS',
-  'BAN_MEMBERS',
-  'ADMINISTRATOR',
-  'MANAGE_CHANNELS',
-  'MANAGE_GUILD',
-  'ADD_REACTIONS',
-  'VIEW_AUDIT_LOG',
-  'PRIORITY_SPEAKER',
-  'STREAM',
-  'VIEW_CHANNEL',
-  'READ_MESSAGES',
-  'SEND_MESSAGES',
-  'SEND_TTS_MESSAGES',
-  'MANAGE_MESSAGES',
-  'EMBED_LINKS',
-  'ATTACH_FILES',
-  'READ_MESSAGE_HISTORY',
-  'MENTION_EVERYONE',
-  'EXTERNAL_EMOJIS',
-  'USE_EXTERNAL_EMOJIS',
-  'CONNECT',
-  'SPEAK',
-  'MUTE_MEMBERS',
-  'DEAFEN_MEMBERS',
-  'MOVE_MEMBERS',
-  'USE_VAD',
-  'CHANGE_NICKNAME',
-  'MANAGE_NICKNAMES',
-  'MANAGE_ROLES',
-  'MANAGE_ROLES_OR_PERMISSIONS',
-  'MANAGE_WEBHOOKS',
-  'MANAGE_EMOJIS'
-];
-```
+if (!message.guild.me.hasPermission('MANAGE_ROLES')) {
+    return message.channel.send("I need the mange roles permission for this command to work!")
+};
+// and check the member's permissions:
+if (!message.member.hasPermission('MANAGE_GUILD')) {
+    message.reply("You can't use this command!")
+};
+getUserFromMention = (mention) => {
+	if (!mention) return;
+	if (mention.startsWith('<@') && mention.endsWith('>')) {
+			mention = mention.slice(2, -1);
+			if (mention.startsWith('!')) {
+					mention = mention.slice(1);
+			};
+			return client.users.cache.get(mention);
+	};		
+};
+let toMute;
+    toMute = message.guild.member(getUserFromMention(args[0]));
+if (!toMute) toBan = message.guild.members.cache.get(args[0]);
+if (!toMute) return message.channel.send(`I can't find that user.`);
+let muteRole = message.guild.roles.cache.find(role => role.name.toLowerCase() == "muted");
+if (!muteRole) {
+    return message.channel.send("Aw, snap! I can't find a mute role in this server...")
+    toMute.roles.add(muteRole.id)
+    .catch((error) => {
+        console.error(error);
+       return message.reply(`Uh-oh. There was an error whilst adding the ${muteRole.name} role to ${toMute.user.tag}! (\`Error: ${error}\`)`)
+    });
+message.channel.send(`${toMute.user.tag} has been muted.`)
